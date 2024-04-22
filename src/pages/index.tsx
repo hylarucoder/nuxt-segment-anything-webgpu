@@ -17,13 +17,17 @@ interface TPoint {
   point: number[]
 }
 
+function sum(arr: number[]) {
+  console.log(arr)
+  return arr.reduce((acc, x) => acc + x, 0)
+}
+
 
 export default defineComponent({
   setup(props) {
     const btnCutDisable = ref(true)
     const baseImage = ref("")
     const status = ref("")
-    const progressBarLog = ref([])
     const refContainer = ref()
     const refMaskCanvas = ref()
     const lastPoints = ref<TPoint[]>([])
@@ -33,6 +37,8 @@ export default defineComponent({
     const modelReady = ref(false)
     const imageDataURI = ref("")
     const samReady = ref(false)
+    const progressBarLog = ref([])
+    const samModelDLProgress = ref(0)
 
     const getMaskCanvas = () => {
       if (!refMaskCanvas.value) {
@@ -168,10 +174,10 @@ export default defineComponent({
           isEncoded.value = true
         }
       } else if (type === "sam_model_download") {
-        if (data.progress) {
-          data.progress = data.progress.toFixed(2)
-        }
-        progressBarLog.value = data
+        progressBarLog.value = data as any[]
+        samModelDLProgress.value = (sum(data.map(x => {
+          return x.progress
+        })) / progressBarLog.value.length).toFixed(2)
       }
     })
 
@@ -270,18 +276,11 @@ export default defineComponent({
               (!isEncoded.value && baseImage.value) &&
               <div class={"absolute flex justify-center items-center z-10 bg-white w-full h-full"}>
                 <div class="flex flex-col">
-                  <div>loading model</div>
+                  <div>loading model, please wait for a moment</div>
+                  {/* calculate progress */}
                   {
-                    progressBarLog.value.map(x => {
-                      return (
-                        <div>
-                          {
-                            `${x.file} | ${x.status} ${x.progress.toFixed(2)}%`
-                          }
-                        </div>
-                      )
-                    })
-                  }
+                    samModelDLProgress.value
+                  } %
                 </div>
               </div>
             }
