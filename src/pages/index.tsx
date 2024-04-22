@@ -270,12 +270,13 @@ export default defineComponent({
               (!isEncoded.value && baseImage.value) &&
               <div class={"absolute flex justify-center items-center z-10 bg-white w-full h-full"}>
                 <div class="flex flex-col">
+                  <div>loading model</div>
                   {
                     progressBarLog.value.map(x => {
                       return (
                         <div>
                           {
-                            `${x.file} | ${x.status} ${x.progress}%`
+                            `${x.file} | ${x.status} ${x.progress.toFixed(2)}%`
                           }
                         </div>
                       )
