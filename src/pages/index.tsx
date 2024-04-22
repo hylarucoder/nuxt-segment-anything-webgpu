@@ -192,6 +192,18 @@ export default defineComponent({
                    e.preventDefault()
                  }
                }}
+               onMousemove={(e) => {
+                 if (!isEncoded.value || isMultiMaskMode.value) {
+                   // Ignore mousemove events if the image is not encoded yet,
+                   // or we are in multi-mask mode
+                   return
+                 }
+                 lastPoints.value = [getPoint(e)]
+
+                 if (!isDecoding.value) {
+                   decode() // Only decode if we are not already decoding
+                 }
+               }}
                ref={refContainer}
                style={{
                  backgroundImage: baseImage.value ? `url(${baseImage.value})` : "none",
