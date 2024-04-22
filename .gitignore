@@ -1,0 +1,11 @@
+node_modules
+*.log
+dist
+.output
+.nuxt
+.env
+.idea/
+.DS_Store
+.vscode/
+.pnpm-store/
+src/public/models/sam/
